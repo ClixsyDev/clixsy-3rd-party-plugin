@@ -3,9 +3,9 @@
 class Clixsy_3rd_Patrty_Cf7_Admin {
 	private $plugin_name;
 	private $version;
-	private $github_repo_url = 'https://api.github.com/repos/USERNAME/REPO_NAME/releases/latest';
-	private $plugin_slug = 'YOUR-PLUGIN-SLUG';
-	private $plugin_file = 'YOUR-PLUGIN-FILE.php';
+	private $github_repo_url = 'https://github.com/ClixsyDev/clixsy-3rd-party-plugin/releases/latest';
+	private $plugin_slug = 'clixsy-3rd-party-cf7';
+	private $plugin_file = 'clixsy-3rd-patrty-cf7.php';
 	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
@@ -16,7 +16,39 @@ class Clixsy_3rd_Patrty_Cf7_Admin {
 
 		// Add the redirect action
 		add_action('acf/save_post', array($this, 'redirect_after_save'), 1);
+		add_filter('pre_set_site_transient_update_plugins', array($this, 'check_for_updates'));
+
 	}
+
+	/**
+	 * Check for updates for autoupdates
+	 *
+	 * @since    1.0.0
+	 */
+	public function check_for_updates($transient) {
+    if (empty($transient->checked)) {
+        return $transient;
+    }
+
+    $response = wp_remote_get($this->github_repo_url);
+
+    if (is_wp_error($response)) {
+        return $transient;
+    }
+
+    $response = json_decode(wp_remote_retrieve_body($response));
+
+    if (version_compare($this->version, $response->tag_name, '<')) {
+        $transient->response[$this->plugin_slug . '/' . $this->plugin_file] = (object) array(
+            'new_version' => $response->tag_name,
+            'package'     => $response->zipball_url,
+            'slug'        => $this->plugin_slug,
+        );
+    }
+
+    return $transient;
+}
+
 
 	/**
 	 * Register the stylesheets for the admin area.
