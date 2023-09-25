@@ -3,9 +3,7 @@
 class Clixsy_3rd_party_Cf7_Admin {
 	private $plugin_name;
 	private $version;
-	private $github_repo_url = 'https://github.com/ClixsyDev/clixsy-3rd-party-plugin/releases/latest';
-	private $plugin_slug = 'clixsy-3rd-party-cf7';
-	private $plugin_file = 'clixsy-3rd-party-cf7.php';
+
 	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
@@ -20,43 +18,7 @@ class Clixsy_3rd_party_Cf7_Admin {
 		add_filter('pre_set_site_transient_update_plugins', array($this, 'check_for_updates'));
 	}
 
-	/**
-	 * Check for updates for autoupdates
-	 *
-	 * @since    1.0.0
-	 */
-	public function check_for_updates($transient) {
 
-
-		if (empty($transient->checked)) {
-			return $transient;
-		}
-
-		$response = wp_remote_get($this->github_repo_url);
-
-		if (is_wp_error($response)) {
-			return $transient;
-		}
-
-		$response = json_decode(wp_remote_retrieve_body($response));
-
-		if (version_compare($this->version, $response->tag_name, '<')) {
-			$transient->response[$this->plugin_slug . '/' . $this->plugin_file] = (object) array(
-				'new_version' => $response->tag_name,
-				'package'     => $response->zipball_url,
-				'slug'        => $this->plugin_slug,
-				'tested'      => '6.3.1',  // latest WordPress version the plugin has been tested with
-				'requires'    => '5.0',  // minimum WordPress version required for the plugin
-				'last_updated' => date('Y-m-d'), // the date of the last update
-				'sections'    => array(  // additional details shown on the plugin update page
-					'description' => 'The new version of the plugin',
-					'changelog'   => 'Changes made in this release'
-				)
-			);
-		}
-
-		return $transient;
-	}
 
 
 	/**

@@ -16,7 +16,7 @@
  * Plugin Name:       Clisxsy third party integration for CF7
  * Plugin URI:        https://https://github.com/ClixsyDev
  * Description:       This plugin will help you to set the endpoint and map field from Contact Form 7 to any third-party url you want. Developed by CLIXSY
- * Version:           1.0.7
+ * Version:           1.0.8
  * Author:            Bogdan Zakharchyshyn
  * Author URI:        https://https://github.com/ClixsyDev
  * License:           GPL-2.0+
@@ -30,12 +30,16 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+$github_repo_url = 'https://api.github.com/repos/ClixsyDev/clixsy-3rd-party-plugin/releases/latest';
+$plugin_slug = plugin_basename( __FILE__ );
+$plugin_file = 'clixsy-3rd-party-cf7.php';
+
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CLIXSY_3RD_party_CF7_VERSION', '1.0.7' );
+define( 'CLIXSY_3RD_party_CF7_VERSION', '1.0.8' );
 
 /**
  * The code that runs during plugin activation.
@@ -80,3 +84,48 @@ function run_clixsy_3rd_party_cf7() {
 
 }
 run_clixsy_3rd_party_cf7();
+
+
+/**
+ * Check for updates for autoupdates
+ *
+ * @since    1.0.0
+ */
+function check_for_updates($transient) {
+	global $github_repo_url, $plugin_slug, $plugin_file;
+
+	if (empty($transient->checked)) {
+			return $transient;
+	}
+
+	$response = wp_remote_get($github_repo_url);
+
+	if (is_wp_error($response)) {
+			return $transient;
+	}
+
+	$response = json_decode(wp_remote_retrieve_body($response));
+
+	if (!isset($response->tag_name) || !isset($response->zipball_url)) {
+			return $transient;
+	}
+
+	if (version_compare(CLIXSY_3RD_party_CF7_VERSION, $response->tag_name, '<')) {
+			$transient->response[plugin_basename(__FILE__)] = (object) array(
+					'new_version' => $response->tag_name,
+					'package'     => $response->zipball_url,
+					'slug'        => $plugin_slug,
+					'tested'      => '6.3.1',  // latest WordPress version the plugin has been tested with
+					'requires'    => '5.0',    // minimum WordPress version required for the plugin
+					'last_updated' => date('Y-m-d'), // the date of the last update
+					'sections'    => array(    // additional details shown on the plugin update page
+							'description' => 'The new version of the plugin',
+							'changelog'   => 'Changes made in this release'
+					)
+			);
+	}
+
+	return $transient;
+}
+add_filter('pre_set_site_transient_update_plugins', 'check_for_updates');
+
