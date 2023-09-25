@@ -18,7 +18,6 @@ class Clixsy_3rd_party_Cf7_Admin {
 		add_action('acf/save_post', array($this, 'redirect_after_save'), 1);
 
 		add_filter('pre_set_site_transient_update_plugins', array($this, 'check_for_updates'));
-
 	}
 
 	/**
@@ -27,30 +26,37 @@ class Clixsy_3rd_party_Cf7_Admin {
 	 * @since    1.0.0
 	 */
 	public function check_for_updates($transient) {
-  
 
-    if (empty($transient->checked)) {
-        return $transient;
-    }
 
-    $response = wp_remote_get($this->github_repo_url);
+		if (empty($transient->checked)) {
+			return $transient;
+		}
 
-    if (is_wp_error($response)) {
-        return $transient;
-    }
+		$response = wp_remote_get($this->github_repo_url);
 
-    $response = json_decode(wp_remote_retrieve_body($response));
+		if (is_wp_error($response)) {
+			return $transient;
+		}
 
-    if (version_compare($this->version, $response->tag_name, '<')) {
-        $transient->response[$this->plugin_slug . '/' . $this->plugin_file] = (object) array(
-            'new_version' => $response->tag_name,
-            'package'     => $response->zipball_url,
-            'slug'        => $this->plugin_slug,
-        );
-    } 
+		$response = json_decode(wp_remote_retrieve_body($response));
 
-    return $transient;
-}
+		if (version_compare($this->version, $response->tag_name, '<')) {
+			$transient->response[$this->plugin_slug . '/' . $this->plugin_file] = (object) array(
+				'new_version' => $response->tag_name,
+				'package'     => $response->zipball_url,
+				'slug'        => $this->plugin_slug,
+				'tested'      => '6.3.1',  // latest WordPress version the plugin has been tested with
+				'requires'    => '5.0',  // minimum WordPress version required for the plugin
+				'last_updated' => date('Y-m-d'), // the date of the last update
+				'sections'    => array(  // additional details shown on the plugin update page
+					'description' => 'The new version of the plugin',
+					'changelog'   => 'Changes made in this release'
+				)
+			);
+		}
+
+		return $transient;
+	}
 
 
 	/**
