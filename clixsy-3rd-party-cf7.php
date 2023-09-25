@@ -14,12 +14,13 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Clisxsy third party integration for CF7
- * Plugin URI:        https://https://github.com/ClixsyDev
+ * Plugin URI:        https://github.com/ClixsyDev
  * Description:       This plugin will help you to set the endpoint and map field from Contact Form 7 to any third-party url you want. Developed by CLIXSY
- * Version:           1.0.8
+ * Version:           1.0.9
  * Author:            Bogdan Zakharchyshyn
- * Author URI:        https://https://github.com/ClixsyDev
+ * Author URI:        https://github.com/ClixsyDev
  * License:           GPL-2.0+
+ * Network:           true
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       clixsy-3rd-party-cf7
  * Domain Path:       /languages
@@ -39,7 +40,7 @@ $plugin_file = 'clixsy-3rd-party-cf7.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CLIXSY_3RD_party_CF7_VERSION', '1.0.8' );
+define( 'CLIXSY_3RD_party_CF7_VERSION', '1.0.9' );
 
 /**
  * The code that runs during plugin activation.
@@ -91,12 +92,17 @@ run_clixsy_3rd_party_cf7();
  *
  * @since    1.0.0
  */
+
+
+ 
 function check_for_updates($transient) {
 	global $github_repo_url, $plugin_slug, $plugin_file;
+
 
 	if (empty($transient->checked)) {
 			return $transient;
 	}
+
 
 	$response = wp_remote_get($github_repo_url);
 
@@ -118,10 +124,10 @@ function check_for_updates($transient) {
 					'tested'      => '6.3.1',  // latest WordPress version the plugin has been tested with
 					'requires'    => '5.0',    // minimum WordPress version required for the plugin
 					'last_updated' => date('Y-m-d'), // the date of the last update
-					'sections'    => array(    // additional details shown on the plugin update page
-							'description' => 'The new version of the plugin',
-							'changelog'   => 'Changes made in this release'
-					)
+					'sections'    => array(
+            'description' => '<strong>Description:</strong><br>This plugin allows you to ...',
+            'changelog'   => '<strong>1.0.9:</strong><br> - Fixed a bug ...'
+        )
 			);
 	}
 
@@ -129,3 +135,17 @@ function check_for_updates($transient) {
 }
 add_filter('pre_set_site_transient_update_plugins', 'check_for_updates');
 
+
+
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'add_clear_transient_link');
+
+function add_clear_transient_link($links) {
+    $mylinks = array(
+        '<a href="' . admin_url('plugins.php?clear_my_transient=true') . '">Clear Transient</a>',
+    );
+    return array_merge($links, $mylinks);
+}
+
+if (isset($_GET['clear_my_transient']) && $_GET['clear_my_transient'] === 'true') {
+    delete_site_transient('update_plugins');
+}

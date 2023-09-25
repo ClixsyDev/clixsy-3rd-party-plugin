@@ -14,8 +14,6 @@ class Clixsy_3rd_party_Cf7_Admin {
 
 		// Add the redirect action
 		add_action('acf/save_post', array($this, 'redirect_after_save'), 1);
-
-		add_filter('pre_set_site_transient_update_plugins', array($this, 'check_for_updates'));
 	}
 
 
