@@ -4,7 +4,7 @@ class Clixsy_3rd_Patrty_Cf7_Admin {
 	private $plugin_name;
 	private $version;
 	private $github_repo_url = 'https://github.com/ClixsyDev/clixsy-3rd-party-plugin/releases/latest';
-	private $plugin_slug = 'clixsy-3rd-party-cf7';
+	private $plugin_slug = 'clixsy-3rd-party';
 	private $plugin_file = 'clixsy-3rd-patrty-cf7.php';
 	public function __construct($plugin_name, $version) {
 
