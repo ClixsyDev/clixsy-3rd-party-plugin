@@ -6,8 +6,8 @@
  * @link       https://https://github.com/ClixsyDev
  * @since      1.0.0
  *
- * @package    Clixsy_3rd_Patrty_Cf7
- * @subpackage Clixsy_3rd_Patrty_Cf7/includes
+ * @package    Clixsy_3rd_party_Cf7
+ * @subpackage Clixsy_3rd_party_Cf7/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Clixsy_3rd_Patrty_Cf7
- * @subpackage Clixsy_3rd_Patrty_Cf7/includes
+ * @package    Clixsy_3rd_party_Cf7
+ * @subpackage Clixsy_3rd_party_Cf7/includes
  * @author     Bogdan Zakharchyshyn <facepalmua@gmail.com>
  */
-class Clixsy_3rd_Patrty_Cf7_Loader {
+class Clixsy_3rd_party_Cf7_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

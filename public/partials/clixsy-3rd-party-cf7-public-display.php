@@ -8,8 +8,8 @@
  * @link       https://https://github.com/ClixsyDev
  * @since      1.0.0
  *
- * @package    Clixsy_3rd_Patrty_Cf7
- * @subpackage Clixsy_3rd_Patrty_Cf7/public/partials
+ * @package    Clixsy_3rd_party_Cf7
+ * @subpackage Clixsy_3rd_party_Cf7/public/partials
  */
 ?>
 

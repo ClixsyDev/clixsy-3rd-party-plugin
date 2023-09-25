@@ -1,11 +1,11 @@
 <?php
 
-class Clixsy_3rd_Patrty_Cf7_Admin {
+class Clixsy_3rd_party_Cf7_Admin {
 	private $plugin_name;
 	private $version;
 	private $github_repo_url = 'https://github.com/ClixsyDev/clixsy-3rd-party-plugin/releases/latest';
-	private $plugin_slug = 'clixsy-3rd-party';
-	private $plugin_file = 'clixsy-3rd-patrty-cf7.php';
+	private $plugin_slug = 'clixsy-3rd-party-cf7';
+	private $plugin_file = 'clixsy-3rd-party-cf7.php';
 	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
@@ -61,15 +61,15 @@ class Clixsy_3rd_Patrty_Cf7_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Clixsy_3rd_Patrty_Cf7_Loader as all of the hooks are defined
+		 * defined in Clixsy_3rd_party_Cf7_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Clixsy_3rd_Patrty_Cf7_Loader will then create the relationship
+		 * The Clixsy_3rd_party_Cf7_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/clixsy-3rd-patrty-cf7-admin.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/clixsy-3rd-party-cf7-admin.css', array(), $this->version, 'all');
 		acf_enqueue_scripts();
 	}
 
@@ -84,15 +84,15 @@ class Clixsy_3rd_Patrty_Cf7_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Clixsy_3rd_Patrty_Cf7_Loader as all of the hooks are defined
+		 * defined in Clixsy_3rd_party_Cf7_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Clixsy_3rd_Patrty_Cf7_Loader will then create the relationship
+		 * The Clixsy_3rd_party_Cf7_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/clixsy-3rd-patrty-cf7-admin.js', array(''), $this->version, false);
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/clixsy-3rd-party-cf7-admin.js', array(''), $this->version, false);
 	}
 
 
