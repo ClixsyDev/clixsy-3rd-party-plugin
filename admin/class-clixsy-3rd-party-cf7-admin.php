@@ -25,19 +25,6 @@ class Clixsy_3rd_party_Cf7_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Clixsy_3rd_party_Cf7_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Clixsy_3rd_party_Cf7_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/clixsy-3rd-party-cf7-admin.css', array(), $this->version, 'all');
 		acf_enqueue_scripts();
 	}
@@ -48,19 +35,6 @@ class Clixsy_3rd_party_Cf7_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Clixsy_3rd_party_Cf7_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Clixsy_3rd_party_Cf7_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/clixsy-3rd-party-cf7-admin.js', array(''), $this->version, false);
 	}
 
@@ -153,6 +127,11 @@ class Clixsy_3rd_party_Cf7_Admin {
 							}
 
 							foreach ($posted_data as $p_id => $post_data) {
+
+								// If the field name contains "phone", remove everything except numbers
+								if (strpos($p_id, 'phone') !== false) {
+									$post_data = preg_replace('/[^0-9]/', '', $post_data);
+								}
 								foreach ($acf_mapped_fields as $f_id => $acf_data) {
 									if ($acf_data['form_submission_field'] == '_post_url') {
 										$empty_arr[$acf_data['third_party_field']] = $post_url;
