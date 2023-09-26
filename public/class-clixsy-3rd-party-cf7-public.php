@@ -60,18 +60,6 @@ class Clixsy_3rd_party_Cf7_Public {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Clixsy_3rd_party_Cf7_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Clixsy_3rd_party_Cf7_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/clixsy-3rd-party-cf7-public.css', array(), $this->version, 'all');
 	}
 
@@ -81,20 +69,8 @@ class Clixsy_3rd_party_Cf7_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Clixsy_3rd_party_Cf7_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Clixsy_3rd_party_Cf7_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/clixsy-3rd-party-cf7-public.js', false, $this->version, false);
+
 
 
 		// Get the current page ID
@@ -106,5 +82,11 @@ class Clixsy_3rd_party_Cf7_Public {
 			'page_id' => $page_id,
 		);
 		wp_localize_script($this->plugin_name, 'clixsy_js_data', $translation_array);
+
+		$remove_mask_for_phone = get_field('remove_mask_for_phone', 'clixsy-3rd-party');
+
+		if ($remove_mask_for_phone != 1) {
+			wp_enqueue_script($this->plugin_name.'_phone-mask', plugin_dir_url(__FILE__) . 'js/clixsy-3rd-party-cf7-public__phone-mask.js', false, $this->version, false);
+		}
 	}
 }

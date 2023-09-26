@@ -273,6 +273,14 @@ class Clixsy_3rd_party_Cf7_Admin {
 						'required' => 0,
 					),
 					array(
+						'key' =>  'remove_mask_for_phone_234fs',
+						'name' =>  'remove_mask_for_phone',
+						'label' => 'Remove mask for phone fields?',
+						'type' => 'true_false',
+						'instructions' => '',
+						'required' => 0,
+					),
+					array(
 						'key' => 'field_63811ac830c531',
 						'label' => 'Map fields and forms',
 						'name' => 'map_fields_and_forms',
