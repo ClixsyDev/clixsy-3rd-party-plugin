@@ -16,7 +16,7 @@
  * Plugin Name:       Clixsy third party integration for CF7
  * Plugin URI:        https://github.com/ClixsyDev
  * Description:       This plugin will help you to set the endpoint and map field from Contact Form 7 to any third-party url you want. Developed by CLIXSY
- * Version:           1.1.0.4
+ * Version:           1.1.0.5
  * Author:            Bogdan Zakharchyshyn
  * Author URI:        https://github.com/ClixsyDev
  * License:           GPL-2.0+
@@ -40,7 +40,7 @@ $plugin_file = 'clixsy-3rd-party-cf7.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('CLIXSY_3RD_party_CF7_VERSION', '1.1.0.4');
+define('CLIXSY_3RD_party_CF7_VERSION', '1.1.0.5');
 
 /**
  * The code that runs during plugin activation.
@@ -125,7 +125,7 @@ function check_for_updates($transient) {
 			'last_updated' => date('Y-m-d'), // the date of the last update
 			'sections'    => array(
 				'description' => '<strong>Description:</strong><br>This plugin allows you to ...',
-				'changelog'   => '<strong>1.1.0.4:</strong><br> - Fixed a bug ...'
+				'changelog'   => '<strong>1.1.0.5:</strong><br> - Fixed a bug ...'
 			)
 		);
 	}
@@ -152,25 +152,39 @@ if (isset($_GET['clear_my_transient']) && $_GET['clear_my_transient'] === 'true'
 function rename_github_zip($source, $remote_source, $upgrader, $hook_extra) {
 	global $plugin_slug;
 
-	error_log('Inside rename_github_zip');
-	error_log("Source: $source");
-
 	// Ensure is plugin update and is the plugin in question
 	if (!isset($hook_extra['plugin']) || $hook_extra['plugin'] !== $plugin_slug) {
-		return $source;
+			return $source;
 	}
 
 	$desired_directory_name = 'clixsy-3rd-party-plugin';
-	$path_parts = explode('/', $source);
+	$path_parts = explode('/', rtrim($source, '/'));  // Trim trailing slash if present
 	$last_path = end($path_parts);
+	
+	if (empty($last_path)) {
+			array_pop($path_parts);
+			$last_path = end($path_parts);
+	}
 
 	if ($last_path !== $desired_directory_name) {
-		$path_parts[count($path_parts) - 1] = $desired_directory_name;
-		$new_source = implode('/', $path_parts);
-		rename($source, $new_source);
-		return $new_source;
+			$path_parts[count($path_parts) - 1] = $desired_directory_name;
+			$new_source = implode('/', $path_parts);
+			
+			if (!is_dir($source) || is_dir($new_source)) {
+					error_log("Either $source doesn't exist or $new_source already exists.");
+					return $source;
+			}
+
+			if (!rename($source, $new_source)) {
+					error_log("Failed to rename $source to $new_source");
+					return $source;
+			}
+			
+			return $new_source;
 	}
 
 	return $source;
 }
 add_filter('upgrader_source_selection', 'rename_github_zip', 10, 4);
+
+
