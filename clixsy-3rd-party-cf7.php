@@ -16,7 +16,7 @@
  * Plugin Name:       Clixsy third party integration for CF7
  * Plugin URI:        https://github.com/ClixsyDev
  * Description:       This plugin will help you to set the endpoint and map field from Contact Form 7 to any third-party url you want. Developed by CLIXSY
- * Version:           1.1.0.1
+ * Version:           1.1.0.2
  * Author:            Bogdan Zakharchyshyn
  * Author URI:        https://github.com/ClixsyDev
  * License:           GPL-2.0+
@@ -40,7 +40,7 @@ $plugin_file = 'clixsy-3rd-party-cf7.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CLIXSY_3RD_party_CF7_VERSION', '1.1.0.1' );
+define( 'CLIXSY_3RD_party_CF7_VERSION', '1.1.0.2' );
 
 /**
  * The code that runs during plugin activation.
@@ -126,7 +126,7 @@ function check_for_updates($transient) {
 					'last_updated' => date('Y-m-d'), // the date of the last update
 					'sections'    => array(
             'description' => '<strong>Description:</strong><br>This plugin allows you to ...',
-            'changelog'   => '<strong>1.1.0.1:</strong><br> - Fixed a bug ...'
+            'changelog'   => '<strong>1.1.0.2:</strong><br> - Fixed a bug ...'
         )
 			);
 	}

@@ -275,7 +275,7 @@ class Clixsy_3rd_party_Cf7_Admin {
 					array(
 						'key' =>  'remove_mask_for_phone_234fs',
 						'name' =>  'remove_mask_for_phone',
-						'label' => 'Remove mask for phone fields?',
+						'label' => 'Enable mask for phone fields?',
 						'type' => 'true_false',
 						'instructions' => '',
 						'required' => 0,
