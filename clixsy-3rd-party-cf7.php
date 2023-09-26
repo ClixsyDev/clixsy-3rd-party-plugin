@@ -27,12 +27,12 @@
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
 $github_repo_url = 'https://api.github.com/repos/ClixsyDev/clixsy-3rd-party-plugin/releases/latest';
-$plugin_slug = plugin_basename( __FILE__ );
+$plugin_slug = plugin_basename(__FILE__);
 $plugin_file = 'clixsy-3rd-party-cf7.php';
 
 /**
@@ -40,14 +40,14 @@ $plugin_file = 'clixsy-3rd-party-cf7.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CLIXSY_3RD_party_CF7_VERSION', '1.1.0.3' );
+define('CLIXSY_3RD_party_CF7_VERSION', '1.1.0.3');
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-clixsy-3rd-party-cf7-activator.php
  */
 function activate_clixsy_3rd_party_cf7() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-clixsy-3rd-party-cf7-activator.php';
+	require_once plugin_dir_path(__FILE__) . 'includes/class-clixsy-3rd-party-cf7-activator.php';
 	Clixsy_3rd_party_Cf7_Activator::activate();
 }
 
@@ -56,18 +56,18 @@ function activate_clixsy_3rd_party_cf7() {
  * This action is documented in includes/class-clixsy-3rd-party-cf7-deactivator.php
  */
 function deactivate_clixsy_3rd_party_cf7() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-clixsy-3rd-party-cf7-deactivator.php';
+	require_once plugin_dir_path(__FILE__) . 'includes/class-clixsy-3rd-party-cf7-deactivator.php';
 	Clixsy_3rd_party_Cf7_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_clixsy_3rd_party_cf7' );
-register_deactivation_hook( __FILE__, 'deactivate_clixsy_3rd_party_cf7' );
+register_activation_hook(__FILE__, 'activate_clixsy_3rd_party_cf7');
+register_deactivation_hook(__FILE__, 'deactivate_clixsy_3rd_party_cf7');
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-clixsy-3rd-party-cf7.php';
+require plugin_dir_path(__FILE__) . 'includes/class-clixsy-3rd-party-cf7.php';
 
 /**
  * Begins execution of the plugin.
@@ -82,7 +82,6 @@ function run_clixsy_3rd_party_cf7() {
 
 	$plugin = new Clixsy_3rd_party_Cf7();
 	$plugin->run();
-
 }
 run_clixsy_3rd_party_cf7();
 
@@ -94,41 +93,41 @@ run_clixsy_3rd_party_cf7();
  */
 
 
- 
+
 function check_for_updates($transient) {
 	global $github_repo_url, $plugin_slug, $plugin_file;
 
 
 	if (empty($transient->checked)) {
-			return $transient;
+		return $transient;
 	}
 
 
 	$response = wp_remote_get($github_repo_url);
 
 	if (is_wp_error($response)) {
-			return $transient;
+		return $transient;
 	}
 
 	$response = json_decode(wp_remote_retrieve_body($response));
 
 	if (!isset($response->tag_name) || !isset($response->zipball_url)) {
-			return $transient;
+		return $transient;
 	}
 
 	if (version_compare(CLIXSY_3RD_party_CF7_VERSION, $response->tag_name, '<')) {
-			$transient->response[plugin_basename(__FILE__)] = (object) array(
-					'new_version' => $response->tag_name,
-					'package'     => $response->zipball_url,
-					'slug'        => $plugin_slug,
-					'tested'      => '6.3.1',  // latest WordPress version the plugin has been tested with
-					'requires'    => '5.0',    // minimum WordPress version required for the plugin
-					'last_updated' => date('Y-m-d'), // the date of the last update
-					'sections'    => array(
-            'description' => '<strong>Description:</strong><br>This plugin allows you to ...',
-            'changelog'   => '<strong>1.1.0.3:</strong><br> - Fixed a bug ...'
-        )
-			);
+		$transient->response[plugin_basename(__FILE__)] = (object) array(
+			'new_version' => $response->tag_name,
+			'package'     => $response->zipball_url,
+			'slug'        => $plugin_slug,
+			'tested'      => '6.3.1',  // latest WordPress version the plugin has been tested with
+			'requires'    => '5.0',    // minimum WordPress version required for the plugin
+			'last_updated' => date('Y-m-d'), // the date of the last update
+			'sections'    => array(
+				'description' => '<strong>Description:</strong><br>This plugin allows you to ...',
+				'changelog'   => '<strong>1.1.0.3:</strong><br> - Fixed a bug ...'
+			)
+		);
 	}
 
 	return $transient;
@@ -140,22 +139,25 @@ add_filter('pre_set_site_transient_update_plugins', 'check_for_updates');
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'add_clear_transient_link');
 
 function add_clear_transient_link($links) {
-    $mylinks = array(
-        '<a href="' . admin_url('plugins.php?clear_my_transient=true') . '">Clear Transient</a>',
-    );
-    return array_merge($links, $mylinks);
+	$mylinks = array(
+		'<a href="' . admin_url('plugins.php?clear_my_transient=true') . '">Clear Transient</a>',
+	);
+	return array_merge($links, $mylinks);
 }
 
 if (isset($_GET['clear_my_transient']) && $_GET['clear_my_transient'] === 'true') {
-    delete_site_transient('update_plugins');
+	delete_site_transient('update_plugins');
 }
 
 function rename_github_zip($source, $remote_source, $upgrader, $hook_extra) {
 	global $plugin_slug;
 
+	error_log('Inside rename_github_zip');
+	error_log("Source: $source");
+
 	// Ensure is plugin update and is the plugin in question
 	if (!isset($hook_extra['plugin']) || $hook_extra['plugin'] !== $plugin_slug) {
-			return $source;
+		return $source;
 	}
 
 	$desired_directory_name = 'clixsy-3rd-party-plugin';
@@ -163,10 +165,10 @@ function rename_github_zip($source, $remote_source, $upgrader, $hook_extra) {
 	$last_path = end($path_parts);
 
 	if ($last_path !== $desired_directory_name) {
-			$path_parts[count($path_parts) - 1] = $desired_directory_name;
-			$new_source = implode('/', $path_parts);
-			rename($source, $new_source);
-			return $new_source;
+		$path_parts[count($path_parts) - 1] = $desired_directory_name;
+		$new_source = implode('/', $path_parts);
+		rename($source, $new_source);
+		return $new_source;
 	}
 
 	return $source;
