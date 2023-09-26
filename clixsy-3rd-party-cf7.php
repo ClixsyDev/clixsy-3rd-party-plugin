@@ -16,7 +16,7 @@
  * Plugin Name:       Clixsy third party integration for CF7
  * Plugin URI:        https://github.com/ClixsyDev
  * Description:       This plugin will help you to set the endpoint and map field from Contact Form 7 to any third-party url you want. Developed by CLIXSY
- * Version:           1.1.0.2
+ * Version:           1.1.0.3
  * Author:            Bogdan Zakharchyshyn
  * Author URI:        https://github.com/ClixsyDev
  * License:           GPL-2.0+
@@ -40,7 +40,7 @@ $plugin_file = 'clixsy-3rd-party-cf7.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CLIXSY_3RD_party_CF7_VERSION', '1.1.0.2' );
+define( 'CLIXSY_3RD_party_CF7_VERSION', '1.1.0.3' );
 
 /**
  * The code that runs during plugin activation.
@@ -126,7 +126,7 @@ function check_for_updates($transient) {
 					'last_updated' => date('Y-m-d'), // the date of the last update
 					'sections'    => array(
             'description' => '<strong>Description:</strong><br>This plugin allows you to ...',
-            'changelog'   => '<strong>1.1.0.2:</strong><br> - Fixed a bug ...'
+            'changelog'   => '<strong>1.1.0.3:</strong><br> - Fixed a bug ...'
         )
 			);
 	}
@@ -149,3 +149,26 @@ function add_clear_transient_link($links) {
 if (isset($_GET['clear_my_transient']) && $_GET['clear_my_transient'] === 'true') {
     delete_site_transient('update_plugins');
 }
+
+function rename_github_zip($source, $remote_source, $upgrader, $hook_extra) {
+	global $plugin_slug;
+
+	// Ensure is plugin update and is the plugin in question
+	if (!isset($hook_extra['plugin']) || $hook_extra['plugin'] !== $plugin_slug) {
+			return $source;
+	}
+
+	$desired_directory_name = 'clixsy-3rd-party-plugin';
+	$path_parts = explode('/', $source);
+	$last_path = end($path_parts);
+
+	if ($last_path !== $desired_directory_name) {
+			$path_parts[count($path_parts) - 1] = $desired_directory_name;
+			$new_source = implode('/', $path_parts);
+			rename($source, $new_source);
+			return $new_source;
+	}
+
+	return $source;
+}
+add_filter('upgrader_source_selection', 'rename_github_zip', 10, 4);
