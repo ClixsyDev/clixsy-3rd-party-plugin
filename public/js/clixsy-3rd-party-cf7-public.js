@@ -32,13 +32,6 @@ const getElements = (el, wrap = document) => {
 	}
 };
 
-const style = (el, property) => window.getComputedStyle(el).getPropertyValue(property);
-
-const css = (el, css) => {
-	Object.keys(css).forEach((prop) => {
-		el.style[prop] = css[prop];
-	});
-};
 
 const ready = (callback) => {
 	if (document.readyState !== 'loading') callback();
