@@ -61,15 +61,16 @@ class Clixsy_3rd_party_Cf7_Admin {
 		));
 	}
 
-	public function wh_log($log_msg, $log_msg_info = '') {
-		$log_filename = WP_CONTENT_DIR . "/litify-log/";
+	public function wh_log($log_msg, $log_msg_info = '', $curl_command = '') {
+
+		$log_filename = WP_CONTENT_DIR . "/clixsy-3rd-party-log/";
 		if (!file_exists($log_filename)) {
 			// create directory/folder uploads.
 			mkdir($log_filename, 0777, true);
 		}
 		$log_file_data = $log_filename . 'log_' . date('Y-M-d') . '.log';
 		// if you don't add `FILE_APPEND`, the file will be erased each time you add a log
-		file_put_contents($log_file_data,  "\r\n" . ' ======================= Start ' . date('Y/m/d H:i:s') . ' ======================' . "\r\n" . $log_msg . "\r\n" . json_encode($log_msg_info) . "\r\n" . "\r\n" . ' ======================= end of log ======================' . "\n" . "\r\n", FILE_APPEND);
+    file_put_contents($log_file_data,  "\r\n" . ' ======================= Start ' . date('Y/m/d H:i:s') . ' ======================' . "\r\n" . $log_msg . "\r\n" . json_encode($log_msg_info) . "\r\nCurl Command: " . $curl_command . "\r\n" . "\r\n" . ' ======================= end of log ======================' . "\n" . "\r\n", FILE_APPEND);
 	}
 
 	public function stringify($value) {
@@ -96,7 +97,7 @@ class Clixsy_3rd_party_Cf7_Admin {
 				if (!$fields_and_forms['disable_single_integration']) {
 					foreach ($fields_and_forms['select_form'] as $acf_form_id) {
 						if ($acf_form_id == $form_id) {
-							$auth_token = $fields_and_forms['authorization'];
+							$auth_token = !empty($fields_and_forms['authorization']) ? $fields_and_forms['authorization'] : '';
 							$url = $fields_and_forms['endpoint'];
 							$content_type = $fields_and_forms['content_type']['label'];
 							$curl = curl_init($url);
@@ -159,12 +160,18 @@ class Clixsy_3rd_party_Cf7_Admin {
 							// curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 							// curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
+							// Build the curl command string
+							$curl_command = "curl -X POST '{$url}'";
+							$curl_command .= " -H 'Authorization: {$auth_token}'";
+							$curl_command .= " -H '{$content_type}'";
+							$curl_command .= " -d '" . json_encode($empty_arr) . "'";
+
 							$resp = curl_exec($curl);
 							$responseInfo = curl_getinfo($curl);
 							curl_close($curl);
 
 							// logging everything
-							$this->wh_log($resp, $responseInfo);
+							$this->wh_log($resp, $responseInfo, $curl_command);
 						}
 					}
 				}
